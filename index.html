@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2024 신년계획 버킷리스트</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <style></style>
+  </head>
+  <body class="bg center">
+    <h1 class="title-t5">SPARTHON Bucket List</h1>
+    <p class="msg">꿈은 꾸는 것이 아닌, 이루는 것이다!</p>
+    <div class="audio-controller">
+      <audio controls loop>
+        <source src="bgm.mp3" type="audio/mpeg" />
+      </audio>
+    </div>
+    <div class="submitForm">
+      <input type="text" class="input" placeholder="내용을 입력하세요" />
+      <button class="createBtn"></button>
+    </div>
+    <div class="flex-row wrap">
+      <div class="bucket img1 center">나만의 웹 만들기</div>
+      <div class="bucket img2 center">바디 프로필 찍기</div>
+      <div class="bucket img3 center">인테리어 꾸미기</div>
+      <div class="bucket img4 center">식물 키우기</div>
+      <div class="bucket img5 center">10kg 감량</div>
+      <div class="bucket img6 center">내가 만든 웹 사이트 자랑하기</div>
+    </div>
+    <script>
+      // 페이지 로드 시 이전 상태 복원
+      document.addEventListener('DOMContentLoaded', (event) => {
+        const buckets = document.querySelectorAll('.bucket');
+        buckets.forEach((bucket, index) => {
+          // 로컬 스토리지에서 상태 읽기
+          const isDone = localStorage.getItem('bucket' + index) === 'done';
+          if (isDone) {
+            bucket.classList.add('done');
+          }
+        });
+      });
+
+      const createBtn = document.querySelector('.createBtn');
+      const bucketDiv = document.querySelector('.flex-row');
+
+      createBtn.addEventListener('click', () => {
+        let inputValue = document.querySelector('.input').value;
+
+        //랜덤 이미지 나올 수 있게 함수 생성
+        function getRandomNumber() {
+          return Math.floor(Math.random() * 6) + 1;
+        }
+
+        // 새로운 버킷 리스트 아이템을 생성
+        let randomNum = getRandomNumber();
+        console.log(randomNum);
+        const bucketList = document.createElement('div');
+        bucketList.className = `bucket img${randomNum} center`;
+        bucketList.textContent = inputValue;
+
+        // 삭제 버튼 생성
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'deleteBtn';
+        deleteBtn.addEventListener('click', (event) => {
+          event.target.parentNode.remove();
+        });
+
+        // bucketList 요소의 position을 상대적인 위치로 설정
+        bucketList.style.position = 'relative';
+
+        // 삭제 버튼 위치 설정
+        deleteBtn.style.position = 'absolute';
+        deleteBtn.style.top = '20px';
+        deleteBtn.style.right = '20px';
+
+        bucketList.appendChild(deleteBtn);
+
+        bucketList.addEventListener('click', function () {
+          // 클래스 토글
+          bucketList.classList.toggle('done');
+
+          // 로컬 스토리지에 상태 저장
+          const index = Array.from(bucketDiv.children).indexOf(bucketList);
+          if (bucketList.classList.contains('done')) {
+            localStorage.setItem('bucket' + index, 'done');
+          } else {
+            localStorage.setItem('bucket' + index, '');
+          }
+        });
+
+        bucketDiv.appendChild(bucketList);
+        inputValue = '';
+      });
+
+      // 버킷 리스트 클릭 이벤트
+      const buckets = document.querySelectorAll('.bucket');
+      buckets.forEach((bucket, index) => {
+        bucket.addEventListener('click', function () {
+          // 클래스 토글
+          bucket.classList.toggle('done');
+
+          // 로컬 스토리지에 상태 저장
+          if (bucket.classList.contains('done')) {
+            localStorage.setItem('bucket' + index, 'done');
+          } else {
+            localStorage.setItem('bucket' + index, '');
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
